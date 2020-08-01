@@ -52,3 +52,25 @@ const hello = 'Hello World! I am finally ready to learn Node!'
 
 fs.writeFileSync('./txt/output.txt', hello);
 ```
+
+#### Let's understand the difference between Synchronous and asynchronous coding
++ Synchronous coding is when code can only run if the previous code is executed. This can cause problems if you have code that takes too long to execute. \
+It's even worse if you have a lot of users in your application. Simple functionality like logining in or reading othe feeds will be dealed. This is also called blocking method.
+
+```js
+const text = fs.readFileSync('./txt/input.txt', 'utf8');
+console.log(text); 
+```
+
++ Asynchronous is when heavy code that take longer to execute is done at the background as the other code runs in the application. When the longer code is done, it's called through a callback function that runs the result/output of the previous code. This is also called non-blocking.
+```js
+fs.readFileSync('./txt/input.txt', 'utf8', (err,data) => {
+    console.log(data);
+});
+console.log('Asynchronous code');
+```
+#### Single thread in node JS
+- In node JS process there is only one Single thread.\
+A thread is a set of instructions that runs our code in the machine processor. Hence in every node application there is one thread that all your users are using. If one user runs a Synchronous code that takes a few seconds, the rest of the users will have to wait until the code is executed. \
+This can be a pain if your application has thousands of users because all functionality of the application will stop working asynchronously and wait until for the previous code is executed. \
+That's why asynchronous method is preferred over synchronous method in node applications.
