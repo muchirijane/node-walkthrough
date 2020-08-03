@@ -20,7 +20,8 @@ console.log(hello);
 ```js
 node index.js
 ```
-#### ~ Congratulations you just created your first line of code in Node JS~
+####  Congratulations you just created your first line of code in Node JS
+---
 
 #### node module - used to store the functionality of a function. Example file system (fs) module for reading and writing data.
 
@@ -69,8 +70,53 @@ fs.readFileSync('./txt/input.txt', 'utf8', (err,data) => {
 });
 console.log('Asynchronous code');
 ```
+
 #### Single thread in node JS
 - In node JS process there is only one Single thread.\
 A thread is a set of instructions that runs our code in the machine processor. Hence in every node application there is one thread that all your users are using. If one user runs a Synchronous code that takes a few seconds, the rest of the users will have to wait until the code is executed. \
 This can be a pain if your application has thousands of users because all functionality of the application will stop working asynchronously and wait until for the previous code is executed. \
 That's why asynchronous method is preferred over synchronous method in node applications.
+---
+
+#### How to make a simple web server in node
+```js
+const http = require('http');
+
+const server = http.createServer((req, res) => {
+    console.log(req);
+    res.end('Hello from server! 😍');
+});
+
+server.listen(8000, '127.0.0.1', () => {
+    console.log('Server listening! 💣');
+});
+```
+---
+## Rounting
+#### What is rounting?
+This is implementing different actions for different urls.
+You can use the if else statement to direct actions to the urls inside the createServer callback function.
+```js
+ const pathName = req.url;
+const server = http.createServer((req, res) => {
+
+    if(pathName === '/' || pathName === '/overview' ){
+        res.end('This is from overview!😍');
+    }else if(pathName === '/product'){
+        res.end('This is from product!');
+    }else{
+        res.writeHead(404, { 
+            'Content-type' : 'text/html ,charset=utf-8',
+            'my-own-header' : 'hello-world'
+        });
+        res.end('<h1>Page not found!</h1>');
+    }
+});
+
+server.listen(8000, '127.0.0.1', () => {
+    console.log('Server listening! 💣');
+});
+```
+---
+### How to make a simple API 
++ Use the if statement to match the  request api url. 
