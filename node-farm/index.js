@@ -39,6 +39,8 @@ const url = require('url');
 // server.listen(8000, '127.0.0.1', () => {
 //     console.log('Server listening! 💣');
 //  });
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const objData =  JSON.parse(data);
 
 const server = http.createServer((req, res) => {
     const pathName = req.url;
@@ -48,11 +50,9 @@ const server = http.createServer((req, res) => {
     }else if(pathName === '/product'){
         res.end('This is from product!');
     }else if(pathName === '/api'){
-        // fs.readFile(`${__dirname}./dev-data/data.json`, 'utf-8' , (err, data) => {
-        //     res.end(JSON.parse(data));
-        // });
-        res.end('API')
-
+           res.writeHead(200, {'Content-Type': 'application/json'})
+           res.end(data);
+        
     }else{
         res.writeHead(404, { 
             'Content-type' : 'text/html ,charset=utf-8',

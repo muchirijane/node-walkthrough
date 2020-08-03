@@ -97,7 +97,7 @@ server.listen(8000, '127.0.0.1', () => {
 This is implementing different actions for different urls.
 You can use the if else statement to direct actions to the urls inside the createServer callback function.
 ```js
- const pathName = req.url;
+const pathName = req.url;
 const server = http.createServer((req, res) => {
 
     if(pathName === '/' || pathName === '/overview' ){
@@ -119,4 +119,40 @@ server.listen(8000, '127.0.0.1', () => {
 ```
 ---
 ### How to make a simple API 
+#### How to request data as a user with one API call.
 + Use the if statement to match the  request api url. 
+```js
+if(pathName === '/api') {}
+```
++ Create a file system function that runs once to read the data. Hence you will use the asynchronous file system function. \
+ It's a good practice to use dirname variable to locate the directory where the script is. \
+ To use the json data in html you have to use JSON.parse to convert it to javascript. Store it in a variable.
+ ```js
+ const data = fs.readFileSync(`${__dirname}/dev-data/data.json` 'utf-8');
+ const objData = JSON.parse(data);
+ ```
++ Send the data to the browser as a response by using res.end method.
++ Tell the browser that your data is JSON, use res.writeHead method.
+```js
+const pathName = req.url;
+
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const objData =  JSON.parse(data);
+
+const server = http.createServer((req, res) => {
+    if(pathName === '/api') {
+        res.writeHead(200, {'Content-Type': 'application/json'})
+        res.end(data);     
+    }else{
+        res.writeHead(404, { 
+            'Content-type' : 'text/html ,charset=utf-8',
+            'my-own-header' : 'hello-world'
+        });
+        res.end('<h1>Page not found!</h1>');
+    }
+});
+
+server.listen(8000, '127.0.0.1', () => {
+    console.log('Server listening! 💣');
+});
+```
