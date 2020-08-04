@@ -54,10 +54,11 @@ const objData =  JSON.parse(data);
 
 const server = http.createServer((req, res) => {
     console.log(req.url);
+    const {query, pathname} = (url.parse(req.url, true));
     
     const pathName = req.url;
      //overview
-    if(pathName === '/' || pathName === '/overview' ){
+    if(pathname === '/' || pathName === '/overview' ){
         res.writeHead(200 , {'content-type' : 'text/html'});
 
         const cardHtml = objData.map( obj => replaceTemplate(tempCard,obj)).join('');
@@ -65,12 +66,15 @@ const server = http.createServer((req, res) => {
         res.end(output);
 
      //product
-    }else if(pathName === '/product'){
-        res.writeHead(200, {'content-type' : 'text/html'})
-        res.end(tempProduct);
+    }else if(pathname === '/product'){
+        console.log(query);
+        res.writeHead(200, {'content-type' : 'text/html'});
+        const product = objData[query.id];
+        const output = replaceTemplate(tempProduct, product);
+        res.end(output);
 
     //api
-    }else if(pathName === '/api'){
+    }else if(pathname === '/api'){
            res.writeHead(200, {'Content-Type': 'application/json'})
            res.end(data);
     //page not found   
