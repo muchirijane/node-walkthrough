@@ -124,9 +124,10 @@ server.listen(8000, '127.0.0.1', () => {
 ```js
 if(pathName === '/api') {}
 ```
-+ Create a file system function that runs once to read the data. Hence you will use the asynchronous file system function. \
- It's a good practice to use dirname variable to locate the directory where the script is. \
- To use the json data in html you have to use JSON.parse to convert it to javascript. Store it in a variable.
++ Create a file system function that runs once to read the data. Hence you will use the sync file system function. When the application first runs, it will read the json data once and when the user enters the api route, it will send back the data upon request.\
+It's a good practice to use dirname variable to locate the directory where the script is. \
+To use the json data in html you have to use JSON.parse to convert the JSON string data to javascript and store it in a variable.
+ 
  ```js
  const data = fs.readFileSync(`${__dirname}/dev-data/data.json` 'utf-8');
  const objData = JSON.parse(data);
@@ -151,8 +152,62 @@ const server = http.createServer((req, res) => {
         res.end('<h1>Page not found!</h1>');
     }
 });
-
+ 
 server.listen(8000, '127.0.0.1', () => {
     console.log('Server listening! 💣');
 });
+```
+#### HTML templates
++ Start by replacing the text you want to add dynamically with data later on.
+```html
+<h2 class="product__name">{%PRODUCT_NAME%}</h2>
+    <div class="product__details">
+        <p><span class="emoji-left">🌍</span> From {%FROM%}</p>
+        <p><span class="emoji-left">❤️</span> {%NUTRIENTS%}</p>
+        <p><span class="emoji-left">📦</span> {%QUANTITY%}</p>
+        <p><span class="emoji-left">🏷</span> {%PRICE%}€</p>
+    </div>
+```
++ For the links you with use the id number that you stored in the json data. Because the data is stored in an array it will be best to start with id = "0". Instead of using the # inside the href, you will add the api route and id number.
+```html
+<a class="card__link" href="/product?id={%ID%}">
+    <span>Detail <i class="emoji-right">👉</i></span>
+</a>
+```
+//////Filing the templates
++ Make sure the templates are read during initialization of the application. You can use sync file system function which is a blocking method and store it in a variable. But because it will run only once when the application is running not when the createServer callback function is called.
+```js
+const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
+```
++ In the createServer callback function tell the browser the type of information it's about to receive by using witeHead function.
++ Loop through the JSON data with map method that will return replaceTemplate function that has individual data from the json data array and the card template.
+```js
+if(pathname === '/' || pathName === '/overview' ){
+     //tells the browser the type of information it's about to receive
+    res.writeHead(200 , {'content-type' : 'text/html'});
+
+    const cardHtml = objData.map( obj => replaceTemplate(tempCard,obj)).join('');
+    const output = tempOverview.replace('{%PRODUCT_CARD%}', cardHtml);
+    res.end(output);
+
+    }
+```
++ Inside the replaceTemplate function you can use replace method to replace the placeholder text with the data. 
++ You can use regular expression to make sure the placeholder text is selected globally through out your project.
+```js
+const replaceTemplate =  (card, product) => {
+    let output = card.replace(/{%PRODUCT_NAME%}/g, product.productName);
+    output = output.replace(/{%IMAGE%}/g, product.image);
+    output = output.replace(/{%FROM%}/g, product.from);
+    output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+    output = output.replace(/{%QUANTITY%}/g, product.quantity);
+    output = output.replace(/{%PRICE%}/g, product.price);
+    output = output.replace(/{%DESCRIPTION%}/g, product.description);
+    output = output.replace(/{%ID%}/g, product.id);
+    
+    if(!product.organic)  output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+    return output;
+}
 ```
