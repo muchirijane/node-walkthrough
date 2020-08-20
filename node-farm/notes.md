@@ -119,6 +119,8 @@ server.listen(8000, '127.0.0.1', () => {
 ```
 ---
 ### How to make a simple API 
+API is the acronym for Application Programming Interface, which is a software intermediary that allows two applications to talk to each other.
+Api a service we can request some data.
 #### How to request data as a user with one API call.
 + Use the if statement to match the  request api url. 
 ```js
@@ -210,4 +212,57 @@ const replaceTemplate =  (card, product) => {
     if(!product.organic)  output = output.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
     return output;
 }
+```
++ For the url, you can use the url module. Then use url.parse method and pass req.url as an argument. As a result you will get a query object that tells you the id index. 
+```js
+const {query, pathname} = url.parse(req.url, true);
+```
+```js
+query: {id = "0"},
+pathname : "/overview"
+```
++ Use the query id to get the individual data for each element.
+```js
+const product = objData[query.id];
+```
+
+### NPM install 
+#### Types of packages
++ Dependency packages
++ Development dependencies 
+
+#### What is the difference between dependency and dev dependencies packages
+Dependency modules are required during the runtime while dev dependencies are required during the development. 
+
+#### Slugify
+Helps us to make more readable urls from names.
+
+#### How to install a dependency
+```json
+npm install slugify --save
+//or
+npm i slugify 
+```
+
+#### How to install a dependency
+```json
+npm install nodemon --save-dev
+//or
+npm i nodemon -D 
+```
+
+#### What is nodemom
+[Nodemon](https://nodemon.io/) is a utility that will monitor for any changes in your source and automatically restart your server.
+Instead of using node index.js to run your code nodemon watches for changes and automatically restarts your Node application . This is better than manually restarting it with node.
+
+#### npm packages
+Npm packages follow the semantic version notation. The version of npm packages have the three version numbers : major, minor, patch.
+
+```json
+//install a specific npm package
+npm i slugify@!.0.0
+//Check for outdated npm packages
+npm outdated
+//update npm packages
+npm update slugify || npm update
 ```

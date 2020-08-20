@@ -1,6 +1,9 @@
 const fs = require('fs');
 const http = require('http');
 const url = require('url');
+
+const slugify = require('slugify');
+
 const replaceTemplate = require('./modules/replaceTemplate');
 //////////////////////////////////////////////////// file system
 //synchronous method, blocking
@@ -26,56 +29,65 @@ const replaceTemplate = require('./modules/replaceTemplate');
 //         });
 //     });
 // });
-// console.log('This will be first! 🔥 ');
+// console.log('This will be first! 🔥 '); 🥑
 
 /////////////////////////////////////////////////////////////////////////////
 //////***********************  server.js *********//////////////////////////
 
-const tempOverview = fs.readFileSync(`${__dirname}/templates/template-overview.html`, 'utf-8');
-const tempCard = fs.readFileSync(`${__dirname}/templates/template-card.html`, 'utf-8');
-const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.html`, 'utf-8');
-
-
+const tempOverview = fs.readFileSync(
+  `${__dirname}/templates/template-overview.html`,
+  'utf-8'
+);
+const tempCard = fs.readFileSync(
+  `${__dirname}/templates/template-card.html`,
+  'utf-8'
+);
+const tempProduct = fs.readFileSync(
+  `${__dirname}/templates/template-product.html`,
+  'utf-8'
+);
 
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
-const objData =  JSON.parse(data);
+const objData = JSON.parse(data);
 
+console.log(slugify('Fresh Avocados', { lower: true }));
+const slug = objData.map((data) => slugify(data.productName, { lower: true }));
+console.log(slug);
 const server = http.createServer((req, res) => {
-    console.log(req.url);
-    const {query, pathname} = (url.parse(req.url, true));
-    
-    const pathName = req.url;
-     //overview
-    if(pathname === '/' || pathName === '/overview' ){
-        res.writeHead(200 , {'content-type' : 'text/html'});
+  console.log(req.url);
+  console.log(url.parse(req.url, true));
 
-        const cardHtml = objData.map( obj => replaceTemplate(tempCard,obj)).join('');
-        const output = tempOverview.replace('{%PRODUCT_CARD%}', cardHtml);
-        res.end(output);
+  //const {query, pathname} = (url.parse(req.url, true));
 
-     //product
-    }else if(pathname === '/product'){
-        console.log(query);
-        res.writeHead(200, {'content-type' : 'text/html'});
-        const product = objData[query.id];
-        const output = replaceTemplate(tempProduct, product);
-        res.end(output);
+  const pathName = req.url;
+  //overview
+  if (pathName === '/' || pathName === '/overview') {
+    res.writeHead(200, { 'content-type': 'text/html' });
+
+    const cardHtml = objData.map((obj) => replaceTemplate(tempCard, obj));
+    const output = tempOverview.replace('{%PRODUCT_CARD%}', cardHtml);
+    res.end(output);
+
+    //product
+  } else if (pathName === '/product') {
+    res.writeHead(200, { 'content-type': 'text/html' });
+
+    res.end('this is product');
 
     //api
-    }else if(pathname === '/api'){
-           res.writeHead(200, {'Content-Type': 'application/json'})
-           res.end(data);
-    //page not found   
-    }else{
-        res.writeHead(404, { 
-            'Content-type' : 'text/html ,charset=utf-8',
-            'my-own-header' : 'hello-world'
-        });
-        res.end('<h1>Page not found!</h1>');
-    }
+  } else if (pathName === '/api') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(data);
+    //page not found
+  } else {
+    res.writeHead(404, {
+      'Content-type': 'text/html ,charset=utf-8',
+      'my-own-header': 'hello-world',
+    });
+    res.end('<h1>Page not found!</h1>');
+  }
 });
 
 server.listen(8000, '127.0.0.1', () => {
-    console.log('Server listening! 💣');
+  console.log('Server listening! 💣');
 });
-
