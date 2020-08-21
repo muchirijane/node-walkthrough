@@ -1,5 +1,7 @@
 ## Node JS
 
+Node js ia a runtime that runs on Google V8 engine. It's single threaded and has I/O model.
+
 #### Node JS commands
 
 - .break Sometimes you get stuck, this gets you out
@@ -339,6 +341,8 @@ npm outdated
 npm update slugify || npm update
 ```
 
+---
+
 #### How the web Works
 
 The user/client types in the url of a webpage in a browser, the request is sent to the server where the website is hosted then the server sends back the response by getting the webpage content to the client. This is called client-server architecture or Resquest reponse model.
@@ -370,4 +374,80 @@ The user/client types in the url of a webpage in a browser, the request is sent 
 
 ![how internet works](img/internet.png)
 
+#### Front-end development vs Backend development
+
+- Front end development focus on what users can see. The design and coding what is visible to us. Technologies used: HTML, CSS, Javascript and it frameworks like React js, Vue js, Angular js and more.
+
+- Backend development isn't visible to the users since it runs on the web servers. A basic web server(static server) is a computer connected on the internet that:
+  a) Stores files for website. Like html, css, images and javascript files
+  b) Runs a HTTP server that receives request, send back responses and understanding URL's
+
+A web server acts as a bridge btw the front-end and backend of a web application.
+
+- Static server send static files(basic html, css and javascript files) to the client via HTTP.
+- Dynamic server has the HTTP server, the files needed and a database. With Node Js the database will be MongoDB, python and PostgreSQL database, PHP with MYSQL database and Ruby On Rails.
+
+#### Static, Dynamic and Api-powered websites
+
+- Static websites have ready files that are served to the browser. Like Html, Css, Jvascript and images files. They display the same content for every user.
+
+- Dynamic website are built on the server each time a new request comes in. It has a database which get the data, with a pre-defined template it builds each page the user requests. From each client based request the page is build with Html, css, images and javascript. This pages are then sent to the browser. This process is also callled server-side rendering. Thus it dynamic beccause the content can change according to the user actions or data in the database. Example is the Twitter website, every time you login you see different tweets.
+
+Web application are dynamic websites with functionality like logging in, signing up or creating profiles.
+
+- API-powered website are websites that have a database that fetches data and its build in two steps:
+  a) Building the Api
+  b) Consuming the Api
+  The Api-powered websites are dynamic websites but the only difference is that Api-powered website send JSON data format to the browser not the entire website. Only the data is sent to the client, no Html,css or js files. When it reaches the browser, it builds the website through the templates created.
+  An API is Aplication Programming Interface which is a software that allows application to talk to each other.
+
+![Dynamic website process](img/dynamic.png)
+
+---
+
+#### Node architecture
+
+Node Js is a javascript runtime that runs on Google V8 engine. The V8 engine converts the javascript code, into machine code that a computer can understand.
+
+Node js has v8 engine which is written in Js & C++ and the libuv library which is written in C++.
+Libuv implements two important actions in Node js. That is event loop and thread loop.
+Event loop is for executing callback and implementing the network IO.
+Node rely not only on V8 but also on:
+
+- Http-parser = parsing http
+- C-ares - Dns request
+- OpenSSL - Ketoptography
+- Zlib - Compression
+
+![Node architecture](img/node-arc.png)
+
+Node Js is a single thread. Single threaded means it follows a series of instructions. Basically runs under one thread, which makes it easy to block node application. Some of the series of instruction include:
+
+- Intialize the application
+- Execute "top-level" code - code outside the callback function
+- Require modules
+- Register event callbacks
+- Start Event loop - Where most work is done. It's the heart of node architecture. When the event loop are too heavy and might block the single thread, thread pool comes in and gives us 4 additional threads.(you can config upto 128 threads). The heavy tacks are off loaded to the thread pool.
+  They heavy tasks include:
+  a) File system API's
+  b) Cryptography
+  c) Compression
+  d) DNS lookups
+
+---
+
+#### Event loop, the heart of Node JS architecture.
+
+Event loop is where all the application code inside the callback function is executed.
+Node JS is built around callback functions, this makes it event driven. Event loop calls necessary callback function needed.
+Event loop architecture includes:
+
+- Events are emitted
+- Event loop picks them up
+- Callbacks are called
+
+Then event loop off loads expensive tasks to the thread loop.
 (Amazing notes I take for Jonas course)
+
+#### 4 important event loop pharses
++ Takes care of expired callbacks.
